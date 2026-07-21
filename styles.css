@@ -295,6 +295,7 @@ input, select, textarea {
 }
 
 .header--scrolled {
+  
   background: hsla(40, 33%, 98%, 0.95);
   backdrop-filter: blur(12px);
   box-shadow: var(--shadow-md);
