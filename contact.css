@@ -525,6 +525,7 @@ input, select, textarea {
   padding: 2.5rem;
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border);
+  height: 100%;
 }
 
 .contact-info__item {
