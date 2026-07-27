@@ -126,7 +126,7 @@
     <section class="hero">
       <div class="container">
         <h1 class="hero__title animate-on-scroll">
-          Get in Touch with <span class="hero__title-highlight">Islamic Hub Academy</span>
+          Get in Touch with <span class="hero__title-highlight">Siratic Academy</span>
         </h1>
         <p class="hero__subtitle animate-on-scroll">
           Have questions? Want to book a free trial? Our team is ready to help you start your online learning journey
@@ -193,10 +193,13 @@
           </p>
 
           <form id="contact-form" class="cta-form">
+            <!-- Hidden time field -->
+            <input type="hidden" name="time" id="time">
+
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Your Name *</label>
-                <input type="text" class="form-input" placeholder="Full name" required />
+                <label class="form-label" for="name">Your Name *</label>
+                <input type="text" id="name" name="name" class="form-input" placeholder="Full name" required />
               </div>
               <div class="form-group">
                 <label class="form-label" for="email">Email Address *</label>
@@ -207,35 +210,34 @@
 
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">WhatsApp Number *</label>
-                <input type="tel" class="form-input" placeholder="+447342937590" required />
+                <label class="form-label" for="whatsapp">WhatsApp Number *</label>
+                <input type="tel" id="whatsapp" name="whatsapp" class="form-input" placeholder="+447342937590"
+                  required />
               </div>
               <div class="form-group">
-                <label class="form-label">Preferred Course</label>
-                <select class="form-select">
+                <label class="form-label" for="course">Preferred Course</label>
+                <select id="course" name="course" class="form-select">
                   <option value="">Select a course</option>
                   <optgroup label="Quran & Islamic Studies">
-                    <option>Noorani Qaida & Basics</option>
-                    <option>Fluent Quran Reading</option>
-                    <option>Tajweed Mastery</option>
-                    <option>Full Quran Hifz</option>
-                    <option>Islamic Studies</option>
+                    <option value="Noorani Qaida & Basics">Noorani Qaida & Basics</option>
+                    <option value="Fluent Quran Reading">Fluent Quran Reading</option>
+                    <option value="Tajweed Mastery">Tajweed Mastery</option>
+                    <option value="Full Quran Hifz">Full Quran Hifz</option>
+                    <option value="Islamic Studies">Islamic Studies</option>
                   </optgroup>
                   <optgroup label="Academic & Skills">
-                    <option>English for Muslims</option>
-                    <option>Mathematics</option>
-                    <option>Programming & Fundamentals</option>
+                    <option value="English for Muslims">English for Muslims</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Programming & Fundamentals">Programming & Fundamentals</option>
                   </optgroup>
-                  <option>Custom Combination / Other</option>
+                  <option value="Custom Combination / Other">Custom Combination / Other</option>
                 </select>
               </div>
-
-
             </div>
 
             <div class="form-group">
-              <label class="form-label">Message (Optional)</label>
-              <textarea class="form-textarea"
+              <label class="form-label" for="message">Message (Optional)</label>
+              <textarea id="message" name="message" class="form-textarea"
                 placeholder="Tell us about your learning goals or any questions..."></textarea>
             </div>
 
@@ -401,67 +403,67 @@
       document.querySelectorAll(".animate-on-scroll").forEach(el => observer.observe(el));
     });
   </script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script> -->
 
-  <script>
-    (function () {
-      emailjs.init("IxtChgzAwSf8k0rEu"); // Public Key
-    })();
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
-    document.addEventListener("DOMContentLoaded", function () {
-      const form = document.getElementById("contact-form");
+<script>
+  (function () {
+    emailjs.init("IxtChgzAwSf8k0rEu");
+  })();
 
-      if (!form) {
-        console.error("Form with id 'contact-form' not found!");
-        return;
-      }
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("contact-form");
 
-      form.addEventListener("submit", function (event) {
-        event.preventDefault();
+    if (!form) {
+      console.error("Form with id 'contact-form' not found!");
+      return;
+    }
 
-        const submitBtn = form.querySelector('button[type="submit"]');
-        const originalText = submitBtn ? submitBtn.innerHTML : "Submit";
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
 
-        // Time field set karo (agar maujood hai)
-        const timeInput = form.querySelector('input[name="time"]') || document.getElementById("time");
-        if (timeInput) {
-          timeInput.value = new Date().toLocaleString("en-PK", {
-            timeZone: "Asia/Karachi",
-          });
-        }
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalText = submitBtn.innerHTML;
 
-        // Button loading
-        if (submitBtn) {
-          submitBtn.disabled = true;
-          submitBtn.innerHTML = "Sending...";
-        }
+      // Time set
+      const timeValue = new Date().toLocaleString("en-PK", { timeZone: "Asia/Karachi" });
 
-        const serviceID = "service_almv6lj";
+      // Form data
+      const formData = {
+        name: form.name.value,
+        email: form.email.value,
+        whatsapp: form.whatsapp.value,
+        course: form.course.value || "Not selected",
+        message: form.message.value || "No message",
+        time: timeValue
+      };
 
-        // 1. Admin ko email
-        emailjs
-          .sendForm(serviceID, "template_wlxjhl9", form)
-          .then(function () {
-            // 2. User ko auto-reply
-            return emailjs.sendForm(serviceID, "template_ft4gssk", form);
-          })
-          .then(function () {
-            alert("✅ Thank you! Your message has been sent successfully.");
-            form.reset();
-          })
-          .catch(function (error) {
-            console.error("EmailJS Error:", error);
-            alert("Failed: " + (error.text || JSON.stringify(error)));
-          })
-          .finally(function () {
-            if (submitBtn) {
-              submitBtn.disabled = false;
-              submitBtn.innerHTML = originalText;
-            }
-          });
-      });
+      console.log("Sending:", formData); // check in console
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = "Sending...";
+
+      emailjs
+        .send("service_almv6lj", "template_wlxjhl9", formData)
+        .then(function () {
+          return emailjs.send("service_almv6lj", "template_ft4gssk", formData);
+        })
+        .then(function () {
+          alert("✅ Thank you! Your message has been sent successfully.");
+          form.reset();
+        })
+        .catch(function (error) {
+          console.error("EmailJS Error:", error);
+          alert("Failed: " + (error.text || JSON.stringify(error)));
+        })
+        .finally(function () {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+        });
     });
-  </script>
+  });
+</script>
 </body>
 
 </html>
